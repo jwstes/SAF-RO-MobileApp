@@ -1,0 +1,20 @@
+Install Android Studio Ladybud
+Install Flutter SDK (https://docs.flutter.dev/get-started/install/windows/mobile)
+
+Open Android Studio
+Settings > Android SDK > SDK Tools Tab > Install Android SDK Command Line Tools
+
+flutter doctor --android-licenses
+flutter doctor
+--Everything should be Green Ticked
+
+
+Open Android Studio
+Launch an emulator
+
+
+flutter emulators
+--you should see the emulator running
+
+flutter pub add collection:^1.19.1
+flutter run
