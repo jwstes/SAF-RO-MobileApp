@@ -62,12 +62,5 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
-        event?.let {
-            if (it.action == KeyEvent.ACTION_DOWN) {
-                Log.d("KeyLogger", "Hardware Key pressed: ${it.keyCode}")
-            }
-        }
-        return super.dispatchKeyEvent(event)
-    }
+
 }
