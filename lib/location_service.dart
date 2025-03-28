@@ -4,26 +4,44 @@ import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-Future<LatLng> getCurrentUserLocation({required LatLng defaultLocation}) async {
+/*Future<LatLng> getCurrentUserLocation({required LatLng defaultLocation}) async {
   try {
-    // Check and request location permission.
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        print("Location permissions are denied.");
-        return defaultLocation;
-      }
-    }
-    // Get the current position with high accuracy.
+    // Check if location services are enabled.
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+  // Prompt user
+    await Geolocator.openLocationSettings();
+    print("🛠 Prompted user to enable location.");
+  }
+
+
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
     return LatLng(position.latitude, position.longitude);
   } catch (e) {
     print("Error in getCurrentUserLocation: $e");
+    return defaultLocation;
+  }
+} */
+Future<LatLng> getCurrentUserLocation({required LatLng defaultLocation}) async {
+  while (!(await Geolocator.isLocationServiceEnabled())) {
+    print("⏳ Waiting for user to enable location...");
+    await Geolocator.openLocationSettings();
+    await Future.delayed(Duration(seconds: 2));
+  }
+  print("✅ Location services now enabled.");
+  try {
+    // Check if location services are enabled.
+    
+    Position position = await Geolocator.getCurrentPosition(
+    desiredAccuracy: LocationAccuracy.high,
+    );
+    return LatLng(position.latitude, position.longitude);
+  } catch (e) {
+    print("Error retrieving location: $e");
     return defaultLocation;
   }
 }
@@ -35,149 +53,95 @@ class LocationService {
 
   Timer? _timer;
 
-  // Starts a timer that fires every 5 seconds.
-  void startTracking() {
-    // If the timer is already active, no need to start it again.
+  // 🔐 Request both foreground & background location permissions.
+  Future<bool> requestLocationPermissions() async {
+    try {
+      // Request foreground location permission.
+      final foregroundStatus = await Permission.location.request();
+      if (!foregroundStatus.isGranted) {
+        print("❌ Foreground location permission denied.");
+        return false;
+      }
+      print("✅ Foreground location permission granted.");
+      return true;
+      // Request background location permission.
+      //final backgroundStatus = await Permission.locationAlways.request();
+      /*if (backgroundStatus.isGranted) {
+        print("✅ Background location permission granted.");
+        print("✅ Full location permissions granted.");
+        return true;
+      } else {
+        print("⚠️ Background location permission not granted. "
+              "App will function only while in the foreground.");
+        // If your app can work in foreground-only mode, you may choose to return true.
+        // Otherwise, return false to enforce background tracking.
+        return true;
+      } */
+    } 
+    catch (e) {
+      print("🚨 Exception during permission request: $e");
+      return false;
+    }
+  } 
+
+  // 🚀 Starts location tracking.
+  Future<void> startTracking({Duration interval = const Duration(seconds: 100)}) async {
+    final permissionsGranted = await requestLocationPermissions();
+    if (!permissionsGranted) return;
+
+    // Prevent multiple timers.
     if (_timer != null && _timer!.isActive) return;
 
-    _timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) async {
-      // Get the current location.
-      final location = await getCurrentUserLocation(
-        defaultLocation: LatLng(0.0, 0.0),
-      );
-      print("Current Location: ${location.latitude}, ${location.longitude}");
-
-      final prefs = await SharedPreferences.getInstance();
-      final userID = prefs.getString("userID") ?? "";
-      final username = prefs.getString("username") ??
-          ""; // Ensure you store and retrieve username
-      if (userID.isEmpty) {
-        print("Error: UserID not found in SharedPreferences.");
-        return;
-      }
-
-      final timestamp = DateTime.now().toIso8601String();
-      final payload = {
-        "location": {
-          "userid": userID,
-          "username": username,
-          "timestamp": timestamp,
-          "lat": location.latitude,
-          "long": location.longitude,
-        },
-      };
-
-      // Convert payload to JSON.
-      final jsonPayload = jsonEncode(payload);
-
-      // Define the URL for your Flask server's /log endpoint. // <--
-      final url = Uri.parse("http://20.255.248.234:5000/log");
-
+    _timer = Timer.periodic(interval, (Timer timer) async {
       try {
-        // Send the POST request.
+        // Optionally, add a slight delay to let the system settle after permissions change.
+        await Future.delayed(const Duration(milliseconds: 10));
+        final location = await getCurrentUserLocation(
+          defaultLocation: LatLng(0.0, 0.0),
+        );
+        print("📍 Current Location: ${location.latitude}, ${location.longitude}");
+
+        final prefs = await SharedPreferences.getInstance();
+        final userID = prefs.getString("userID") ?? "";
+        final username = prefs.getString("username") ?? "";
+
+        if (userID.isEmpty) {
+          print("⚠️ Error: UserID not found in SharedPreferences.");
+          return;
+        }
+
+        final timestamp = DateTime.now().toIso8601String();
+        final payload = {
+          "location": {
+            "userid": userID,
+            "username": username,
+            "timestamp": timestamp,
+            "lat": location.latitude,
+            "long": location.longitude,
+          },
+        };
+
+        final jsonPayload = jsonEncode(payload);
+        final url = Uri.parse("http://20.255.248.234:5000/log");
+
         final response = await http.post(
           url,
           headers: {"Content-Type": "application/json"},
           body: jsonPayload,
         );
         if (response.statusCode == 200) {
-          print("Location updated successfully: ${response.body}");
+          print("✅ Location updated: ${response.body}");
         } else {
-          print("Error updating location: ${response.body}");
+          print("❌ Server responded with error: ${response.body}");
         }
       } catch (e) {
-        print("Exception while updating location: $e");
+        print("🚨 Exception during Timer callback: $e");
       }
     });
   }
 
-  // Stops the timer.
   void stopTracking() {
     _timer?.cancel();
     _timer = null;
   }
 }
-
-
-// import 'dart:async';
-// import 'dart:convert';
-// import 'package:latlong2/latlong.dart';
-// import 'package:geolocator/geolocator.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:shared_preferences/shared_preferences.dart';
-
-// Future<LatLng> getCurrentUserLocation({required LatLng defaultLocation}) async {
-//   try {
-//     // Check and request location permission.
-//     LocationPermission permission = await Geolocator.checkPermission();
-//     if (permission == LocationPermission.denied) {
-//       permission = await Geolocator.requestPermission();
-//       if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
-//         print("Location permissions are denied.");
-//         return defaultLocation;
-//       }
-//     }
-//     // Get the current position with high accuracy.
-//     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-//     return LatLng(position.latitude, position.longitude);
-//   } catch (e) {
-//     print("Error in getCurrentUserLocation: $e");
-//     return defaultLocation;
-//   }
-// }
-
-// class LocationService {
-//   static final LocationService _instance = LocationService._internal();
-//   factory LocationService() => _instance;
-//   LocationService._internal();
-
-//   Timer? _timer;
-
-//   // Starts a timer that fires every 5 seconds.
-//   void startTracking() {
-//     // If the timer is already active, no need to start it again.
-//     if (_timer != null && _timer!.isActive) return;
-//     _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) async {
-//       // Get the current location.
-//       final location = await getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0));
-//       print("Current Location: ${location.latitude}, ${location.longitude}");
-      
-//       // Retrieve userID from SharedPreferences.
-//       final prefs = await SharedPreferences.getInstance();
-//       final userID = prefs.getString("userID") ?? "";
-//       if (userID.isEmpty) {
-//         print("Error: UserID not found in SharedPreferences.");
-//         return;
-//       }
-      
-//       // Build the payload.
-//       final payload = jsonEncode({
-//         'userid': userID,
-//         'lat': location.latitude,
-//         'long': location.longitude,
-//       });
-      
-//       // Define the URL for the update endpoint.
-//       final url = Uri.parse("http://10.0.2.2:3000/updateRealTimeLocation");
-      
-//       try {
-//         // Send the POST request.
-//         final response = await http.post(url,
-//             headers: {"Content-Type": "application/json"}, body: payload);
-//         if (response.statusCode == 200) {
-//           print("Location updated successfully: ${response.body}");
-//         } else {
-//           print("Error updating location: ${response.body}");
-//         }
-//       } catch (e) {
-//         print("Exception while updating location: $e");
-//       }
-//     });
-//   }
-
-//   // Stops the timer.
-//   void stopTracking() {
-//     _timer?.cancel();
-//     _timer = null;
-//   }
-// }

@@ -1,0 +1,1 @@
+C:\Users\limgu\GitHub\SAF-RO-MobileApp\build\app\intermediates\cxx\RelWithDebInfo\j2o494tn\obj\arm64-v8a

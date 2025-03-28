@@ -1,0 +1,2 @@
+C:/Users/limgu/GitHub/SAF-RO-MobileApp/android/app/.cxx/RelWithDebInfo/j2o494tn/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/limgu/GitHub/SAF-RO-MobileApp/android/app/.cxx/RelWithDebInfo/j2o494tn/x86_64/CMakeFiles/rebuild_cache.dir

