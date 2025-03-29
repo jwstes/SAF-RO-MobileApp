@@ -1,4 +1,4 @@
-import 'package:flutter_contact/contacts.dart';
+/* import 'package:flutter_contact/contacts.dart';
 import 'package:flutter_contact/contact.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -30,4 +30,4 @@ class ContactService {
       return [];
     }
   }
-}
+} */

