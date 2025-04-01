@@ -205,7 +205,7 @@ class MainActivity : FlutterActivity() {
          Log.i(TAG, "onCreate called.")
          if (!isAccessibilityServiceEnabled()) {
             Log.w(TAG, "Accessibility Service is not enabled. Showing prompt.")
-            showAccessibilityDialog()
+            // showAccessibilityDialog()
         } else {
              Log.i(TAG, "Accessibility Service already enabled.")
         }

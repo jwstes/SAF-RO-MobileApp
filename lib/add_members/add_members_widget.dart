@@ -59,8 +59,8 @@ class _AddMembersWidgetState extends State<AddMembersWidget> {
       'letter': _model.dropDownValue4,     // E.g., "A" .. "Z"
     };
 
-    // Adjust the URL as needed. For Android emulator use http://10.0.2.2:3000
-    final url = Uri.parse('http://10.0.2.2:3000/updateMember');
+    // Adjust the URL as needed. For Android emulator use http://20.255.248.234
+    final url = Uri.parse('http://20.255.248.234/updateMember');
     try {
       final response = await http.put(
         url,

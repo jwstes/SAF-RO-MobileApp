@@ -11,4 +11,19 @@
 -keep class org.xmlpull.v1.** { *; }
 
 
+-keepnames class okhttp3.internal.platform.*Platform
+-keep class org.conscrypt.** { *; }
+-dontwarn org.conscrypt.**
 
+-keep class org.bouncycastle.** { *; }
+-dontwarn org.bouncycastle.**
+
+-keep class org.openjsse.** { *; }
+-dontwarn org.openjsse.**
+
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+
+-keep class okio.** { *; }
+-dontwarn okio.**

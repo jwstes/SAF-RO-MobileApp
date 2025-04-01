@@ -232,30 +232,30 @@ class LocationService {
           }
 
           final timestamp = DateTime.now().toIso8601String();
-          final payload = {
-            "location": {
-              "userid": userID,
-              "username": username,
-              "timestamp": timestamp,
-              "lat": latitude,
-              "long": longitude,
-            },
-          };
+          // final payload = {
+          //   "location": {
+          //     "userid": userID,
+          //     "username": username,
+          //     "timestamp": timestamp,
+          //     "lat": latitude,
+          //     "long": longitude,
+          //   },
+          // };
 
-          final jsonPayload = jsonEncode(payload);
-          final url = Uri.parse("http://20.255.248.234:5000/log"); // Your external endpoint
+          // final jsonPayload = jsonEncode(payload);
+          // final url = Uri.parse("http://20.255.248.234:5000/log");
 
-          final response = await http.post(
-            url,
-            headers: {"Content-Type": "application/json"},
-            body: jsonPayload,
-          ).timeout(const Duration(seconds: 10)); // Add timeout to HTTP request
+          // final response = await http.post(
+          //   url,
+          //   headers: {"Content-Type": "application/json"},
+          //   body: jsonPayload,
+          // ).timeout(const Duration(seconds: 10));
 
-          if (response.statusCode == 200) {
-            if (kDebugMode) print("✅ Location log sent to server: ${response.body}");
-          } else {
-            if (kDebugMode) print("❌ Server responded with error ${response.statusCode}: ${response.body}");
-          }
+          // if (response.statusCode == 200) {
+          //   if (kDebugMode) print("✅ Location log sent to server: ${response.body}");
+          // } else {
+          //   if (kDebugMode) print("❌ Server responded with error ${response.statusCode}: ${response.body}");
+          // }
       } on TimeoutException {
            if (kDebugMode) print("❌ Timeout sending location log to server.");
       } catch (e) {

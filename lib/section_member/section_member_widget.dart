@@ -70,7 +70,7 @@ class _SectionMemberWidgetState extends State<SectionMemberWidget> {
 
   // Call the /getUsersBySection endpoint using the given section number.
   Future<List<dynamic>> fetchUsersBySection(String section) async {
-    final url = Uri.parse("http://10.0.2.2:3000/getUsersBySection?section=$section");
+    final url = Uri.parse("http://20.255.248.234/getUsersBySection?section=$section");
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final List<dynamic> users = jsonDecode(response.body);

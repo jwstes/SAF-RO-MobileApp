@@ -62,7 +62,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
       }
       // Create the GET request URL.
       final url = Uri.parse(
-          "http://10.0.2.2:3000/searchByUsername?username=${Uri.encodeComponent(storedUsername)}");
+          "http://20.255.248.234/searchByUsername?username=${Uri.encodeComponent(storedUsername)}");
       final response = await http.get(url);
       if (response.statusCode == 200) {
         // Expecting a JSON array.

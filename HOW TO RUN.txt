@@ -18,3 +18,31 @@ flutter emulators
 
 flutter pub add collection:^1.19.1
 flutter run
+
+
+
+
+in build.gradle:
+for obfuscated:
+buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+then run
+flutter build apk --obfuscate --split-debug-info=build/app/obfuscated_symbols
+
+for non obfuscated:
+buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+then run
+flutter build apk

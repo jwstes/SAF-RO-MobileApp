@@ -65,7 +65,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   Future<void> _loadChatMessages() async {
     if (_userID.isEmpty || _recipientID.isEmpty) return;
     final url = Uri.parse(
-        "http://10.0.2.2:3000/getChatMessages?userid=$_userID&recipientid=$_recipientID");
+        "http://20.255.248.234/getChatMessages?userid=$_userID&recipientid=$_recipientID");
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -99,8 +99,8 @@ class _ChatWidgetState extends State<ChatWidget> {
       'messagebody': messageText,
     };
     
-    // Adjust the URL as needed. (For Android emulator, use http://10.0.2.2:3000)
-    final url = Uri.parse('http://10.0.2.2:3000/sendMessage');
+    // Adjust the URL as needed. (For Android emulator, use http://20.255.248.234)
+    final url = Uri.parse('http://20.255.248.234/sendMessage');
     try {
       final response = await http.post(
         url,

@@ -26,7 +26,7 @@
 
 
     <application
-        android:label="MobileSec v2"
+        android:label="SAF RO"
         tools:replace="android:label"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"

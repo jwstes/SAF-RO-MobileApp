@@ -61,7 +61,7 @@ class _PlatoonMemberWidgetState extends State<PlatoonMemberWidget> {
 
   // Calls the /getUsersByPlatoon endpoint using the platoon number.
   Future<List<dynamic>> fetchUsersByPlatoon(String platoon) async {
-    final url = Uri.parse("http://10.0.2.2:3000/getUsersByPlatoon?platoon=$platoon");
+    final url = Uri.parse("http://20.255.248.234/getUsersByPlatoon?platoon=$platoon");
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final List<dynamic> users = jsonDecode(response.body);

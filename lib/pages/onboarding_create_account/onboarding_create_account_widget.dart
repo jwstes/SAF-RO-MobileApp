@@ -11,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'onboarding_create_account_model.dart';
 export 'onboarding_create_account_model.dart';
+import '/pages/verify_otp/verify_otp_widget.dart';
 
 class OnboardingCreateAccountWidget extends StatefulWidget {
   const OnboardingCreateAccountWidget({super.key});
@@ -76,8 +77,8 @@ class _OnboardingCreateAccountWidgetState
     );
 
     try {
-      // Use 10.0.2.2 for Android emulator accessing localhost, or your actual server IP
-      final url = Uri.parse("http://10.0.2.2:3000/register");
+      // Use 20.255.248.234 for Android emulator accessing localhost, or your actual server IP
+      final url = Uri.parse("http://20.255.248.234/register");
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
@@ -99,7 +100,7 @@ class _OnboardingCreateAccountWidgetState
         );
         // Navigate to Sign In page after successful registration.
         // Ensure SignInWidget.routeName is correctly defined and route exists
-        context.pushReplacementNamed(SignInWidget.routeName); // Use pushReplacement to prevent going back
+        context.pushReplacementNamed(VerifyOtpPageWidget.routeName); // Use pushReplacement to prevent going back
       } else {
         // Try to parse error message from backend
         String errorMessage = "Error registering user";
@@ -501,7 +502,7 @@ class _OnboardingCreateAccountWidgetState
                           }
                           try {
                             final url =
-                                Uri.parse("http://10.0.2.2:3000/register");
+                                Uri.parse("http://20.255.248.234/register");
                             final response = await http.post(
                               url,
                               headers: {"Content-Type": "application/json"},
@@ -520,7 +521,7 @@ class _OnboardingCreateAccountWidgetState
                                         Text("Account created successfully")),
                               );
                               // Navigate to Sign In page after successful registration.
-                              context.pushNamed(SignInWidget.routeName);
+                              context.pushNamed(VerifyOtpPageWidget.routeName);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -565,7 +566,7 @@ class _OnboardingCreateAccountWidgetState
                         child: InkWell(
                           onTap: () {
                             // Navigate to Sign In page.
-                            context.pushNamed(SignInWidget.routeName);
+                            context.pushNamed(VerifyOtpPageWidget.routeName);
                           },
                           child: RichText(
                             text: TextSpan(

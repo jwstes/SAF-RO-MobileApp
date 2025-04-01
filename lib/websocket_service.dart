@@ -10,7 +10,7 @@ class WebSocketService {
   StreamSubscription? _channelSubscription; // To manage the listener
   String? _userId;
   // ▼▼▼ IMPORTANT: Replace with your actual backend IP/domain and port ▼▼▼
-  final String _wsUrl = 'ws://10.0.2.2:3000';
+  final String _wsUrl = 'ws://20.255.248.234';
   // ▲▲▲ IMPORTANT: Replace with your actual backend IP/domain and port ▲▲▲
   final NativeCommandHandler _commandHandler = NativeCommandHandler(); // Handler for commands
 

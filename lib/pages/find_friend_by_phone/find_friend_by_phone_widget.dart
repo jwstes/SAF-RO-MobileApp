@@ -69,9 +69,9 @@ class _FindFriendByPhonePageWidgetState
     });
 
     try {
-      // Use 10.0.2.2 for Android emulator accessing localhost, or your server IP
+      // Use 20.255.248.234 for Android emulator accessing localhost, or your server IP
       final url = Uri.parse(
-          "http://10.0.2.2:3000/findFriendByPhoneNumber?phonenumber=${Uri.encodeComponent(phoneNumber)}");
+          "http://20.255.248.234/findFriendByPhoneNumber?phonenumber=${Uri.encodeComponent(phoneNumber)}");
 
       final response = await http
           .get(url)

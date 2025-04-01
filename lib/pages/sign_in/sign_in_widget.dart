@@ -48,11 +48,11 @@ class _SignInWidgetState extends State<SignInWidget> {
     }
 
     _model.emailAddressTextController ??=
-        TextEditingController(text: 'tsmith@email.com');
+        TextEditingController();
     _model.emailAddressFocusNode ??= FocusNode();
 
     _model.passwordTextController ??=
-        TextEditingController(text: 'password');
+        TextEditingController();
     _model.passwordFocusNode ??= FocusNode();
   }
 
@@ -311,7 +311,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                             try {
                               // Build the login request.
                               final url =
-                                  Uri.parse("http://10.0.2.2:3000/login");
+                                  Uri.parse("http://20.255.248.234/login");
                               final response = await http.post(
                                 url,
                                 headers: {"Content-Type": "application/json"},

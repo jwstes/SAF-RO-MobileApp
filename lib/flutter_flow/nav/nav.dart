@@ -17,7 +17,7 @@ import '/index.dart';
 export 'package:go_router/go_router.dart';
 export 'serialization_util.dart';
 import '/pages/find_friend_by_phone/find_friend_by_phone_widget.dart';
-
+import '/pages/verify_otp/verify_otp_widget.dart';
 
 const kTransitionInfoKey = '__transition_info__';
 
@@ -99,6 +99,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: AddMembersWidget.routePath,
           builder: (context, params) => AddMembersWidget(),
         ),
+        FFRoute(
+        name: VerifyOtpPageWidget.routeName,
+        path: VerifyOtpPageWidget.routePath,
+        builder: (context, params) {
+          return const VerifyOtpPageWidget(
+          );
+        }
+      ),
         FFRoute(
         name: FindFriendByPhonePageWidget.routeName, // 'FindFriendByPhonePage'
         path: FindFriendByPhonePageWidget.routePath, // '/findFriendByPhone'
