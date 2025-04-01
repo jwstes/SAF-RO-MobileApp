@@ -11,6 +11,9 @@ import 'package:provider/provider.dart';
 import 'landing_page_model.dart';
 export 'landing_page_model.dart';
 
+import '/pages/find_friend_by_phone/find_friend_by_phone_widget.dart';
+
+
 // Additional imports for HTTP, JSON, and SharedPreferences and our LocationService.
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -497,6 +500,94 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
                       ),
                     ),
                   ),
+
+
+
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
+                    child: InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {
+                        // Navigate to the new Find Friend page
+                        context.pushNamed(FindFriendByPhonePageWidget.routeName);
+                      },
+                      child: Container(
+                        width: MediaQuery.sizeOf(context).width * 1.0,
+                        height: 100.0, // Adjust height as needed
+                        decoration: BoxDecoration(
+                          color: FlutterFlowTheme.of(context).secondaryBackground,
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 3.0,
+                              color: Color(0x411D2429),
+                              offset: Offset(0.0, 1.0),
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Padding( // Icon for Find Friend
+                                padding: const EdgeInsetsDirectional.fromSTEB(4.0, 1.0, 1.0, 1.0),
+                                child: Icon(
+                                    Icons.person_search_rounded, // Changed Icon
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    size: 50.0, // Adjusted size
+                                 ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 4.0, 0.0), // Adjusted padding
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Find Friend', // Tile Title
+                                        style: FlutterFlowTheme.of(context).titleLarge,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 8.0, 0.0),
+                                        child: AutoSizeText(
+                                          'Search for friends using their phone number.', // Description
+                                          textAlign: TextAlign.start,
+                                          style: FlutterFlowTheme.of(context).bodySmall,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Column( // Chevron Icon
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center, // Center vertically
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 4.0, 0.0),
+                                    child: Icon(
+                                      Icons.chevron_right_rounded,
+                                      color: FlutterFlowTheme.of(context).secondaryText,
+                                      size: 24.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  
                   // Conditionally show Add Member tile only when role == 2.
                   if (_roleNumber == 2)
                     Padding(

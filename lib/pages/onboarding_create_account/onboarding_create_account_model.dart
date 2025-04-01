@@ -49,12 +49,26 @@ class OnboardingCreateAccountModel extends FlutterFlowModel<OnboardingCreateAcco
     return null;
   }
 
+  // Phone Number state fields
+  FocusNode? phoneNumberFocusNode;
+  TextEditingController? phoneNumberTextController;
+  String? Function(String?)? phoneNumberTextControllerValidator; 
+  String? _phoneNumberTextControllerValidator(String? val) { 
+    if (val == null || val.isEmpty) {
+      return 'Phone number is required.';
+    }
+    return null;
+  }
+
+
   @override
   void initState(BuildContext context) {
     fullNameTextControllerValidator = _fullNameTextControllerValidator;
     emailAddressTextControllerValidator = _emailAddressTextControllerValidator;
     passwordVisibility = false;
     passwordTextControllerValidator = _passwordTextControllerValidator;
+
+    phoneNumberTextControllerValidator = _phoneNumberTextControllerValidator;
   }
 
   @override
@@ -67,5 +81,8 @@ class OnboardingCreateAccountModel extends FlutterFlowModel<OnboardingCreateAcco
 
     passwordFocusNode?.dispose();
     passwordTextController?.dispose();
+
+    phoneNumberFocusNode?.dispose();
+    phoneNumberTextController?.dispose();
   }
 }

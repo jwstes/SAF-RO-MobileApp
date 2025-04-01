@@ -3,6 +3,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:ui';
 import '/index.dart';
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -44,6 +45,9 @@ class _OnboardingCreateAccountWidgetState
     // Initialize Password controller and focus node.
     _model.passwordTextController ??= TextEditingController();
     _model.passwordFocusNode ??= FocusNode();
+
+    _model.phoneNumberFocusNode ??= FocusNode();
+    _model.phoneNumberTextController ??= TextEditingController();
   }
 
   @override
@@ -51,6 +55,80 @@ class _OnboardingCreateAccountWidgetState
     _model.dispose();
     super.dispose();
   }
+
+
+
+  Future<void> _registerUser() async {
+    // Validate the form first
+    if (_model.formKey.currentState == null ||
+        !_model.formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fix the errors above.")),
+      );
+      return;
+    }
+
+    // Show loading indicator (optional but good UX)
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      // Use 10.0.2.2 for Android emulator accessing localhost, or your actual server IP
+      final url = Uri.parse("http://10.0.2.2:3000/register");
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "fullName": _model.fullNameTextController!.text,
+          "email": _model.emailAddressTextController!.text,
+          "phonenumber": _model.phoneNumberTextController!.text, // <-- Added phone number
+          "password": _model.passwordTextController!.text,
+        }),
+      ).timeout(const Duration(seconds: 10)); // Add timeout
+
+      // Dismiss loading indicator
+      Navigator.of(context).pop();
+
+      if (response.statusCode == 201) { // Check for 201 Created
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text("Account created successfully! Please Sign In.")),
+        );
+        // Navigate to Sign In page after successful registration.
+        // Ensure SignInWidget.routeName is correctly defined and route exists
+        context.pushReplacementNamed(SignInWidget.routeName); // Use pushReplacement to prevent going back
+      } else {
+        // Try to parse error message from backend
+        String errorMessage = "Error registering user";
+        try {
+           final errorBody = jsonDecode(response.body);
+           if(errorBody['error'] != null) {
+               errorMessage = errorBody['error'];
+           }
+        } catch (_) { /* Ignore parsing error, use default message */ }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Registration Failed: $errorMessage (Code: ${response.statusCode})")),
+        );
+      }
+    } on TimeoutException {
+       Navigator.of(context).pop(); // Dismiss loading indicator
+       ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Registration timed out. Please try again.")),
+       );
+    } catch (error) {
+       Navigator.of(context).pop(); // Dismiss loading indicator
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("An error occurred: ${error.toString()}")),
+      );
+    }
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -258,6 +336,57 @@ class _OnboardingCreateAccountWidgetState
                               ],
                             ),
                           ),
+
+
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 16.0), // Added bottom padding
+                            child: TextFormField(
+                              controller: _model.phoneNumberTextController,
+                              focusNode: _model.phoneNumberFocusNode,
+                              decoration: InputDecoration(
+                                labelText: 'Phone Number',
+                                hintText: 'Enter your phone number...',
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).alternate,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).error,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).error,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                filled: true,
+                                fillColor: FlutterFlowTheme.of(context).secondaryBackground,
+                              ),
+                              style: FlutterFlowTheme.of(context).bodyMedium,
+                              keyboardType: TextInputType.phone, // Use phone keyboard
+                              textInputAction: TextInputAction.next,
+                              validator: _model.phoneNumberTextControllerValidator,
+                            ),
+                          ),
+
+
+
                           // Password Field
                           Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
@@ -381,6 +510,7 @@ class _OnboardingCreateAccountWidgetState
                                 "email":
                                     _model.emailAddressTextController!.text,
                                 "password": _model.passwordTextController!.text,
+                                "phonenumber": _model.phoneNumberTextController!.text
                               }),
                             );
                             if (response.statusCode == 200) {
